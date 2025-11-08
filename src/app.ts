@@ -1,5 +1,6 @@
 import express from "express";
 import visitant_router from "./routes/visitant.route.js";
+import session from "express-session";
 
 const port = process.env.PORT || 5000;
 const app = express();
