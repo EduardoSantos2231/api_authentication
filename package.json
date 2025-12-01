@@ -12,14 +12,19 @@
   "license": "ISC",
   "type": "module",
   "devDependencies": {
+    "@types/cookie-parser": "^1.4.10",
     "@types/express": "^5.0.5",
     "@types/express-session": "^1.18.2",
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^24.10.0",
+    "dotenv": "^17.2.3",
     "tsx": "^4.20.6",
     "typescript": "^5.9.3"
   },
   "dependencies": {
+    "cookie-parser": "^1.4.7",
     "express": "^5.1.0",
-    "express-session": "^1.18.2"
+    "express-session": "^1.18.2",
+    "jsonwebtoken": "^9.0.2"
   }
 }
