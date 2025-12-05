@@ -8,8 +8,8 @@ const visitant_router = Router();
 
 
 visitant_router.get("/", seeRequisition, visitant.getHomePage);
-visitant_router.get("/login", seeRequisition, visitant.getLoginPage);
-visitant_router.post("/sign", seeRequisition, visitant.postSignIn);
+visitant_router.post("/login", seeRequisition, visitant.login);
+visitant_router.post("/register", seeRequisition, visitant.register);
 visitant_router.get("/inside", validateJwtToken, visitant.getInsideAplication);
 
 export default visitant_router;
