@@ -12,32 +12,36 @@ const visitant = {
     if (!process.env.SECRET_PHRASE) {
       throw new Error("Parece que o segredo do JWT não foi definido no .env");
     }
-    const { email, password } = req.body;
-    if (!email || !password)
-      return res.status(400).json({ erro: "Insira um email e uma senha" });
-    const hasUser = await user.findFirst({ where: { email: email } });
+    try {
+      const { email, password } = req.body;
+      if (!email || !password)
+        return res.status(400).json({ erro: "Insira um email e uma senha" });
+      const hasUser = await user.findFirst({ where: { email: email } });
 
-    if (!hasUser)
-      return res
-        .status(400)
-        .json({
+      if (!hasUser)
+        return res.status(400).json({
           erro: "Credenciais não encontradas, certifique-se que o email atual está cadastrado",
         });
-    const passwordMatches = await bcrypt.compare(password, hasUser.password);
-    if (!passwordMatches)
-      return res.status(400).json({ erro: "Credenciais inválidas" });
-    const token = jwt.sign(
-      { email: hasUser.email, id: hasUser.id },
-      process.env.SECRET_PHRASE,
-      {
-        expiresIn: "1h",
-      },
-    );
-    res.cookie("access-token", token, {
-      httpOnly: true,
-      maxAge: 60 * 60 * 100,
-    });
-    return res.status(200).json({ message: "Você está logado" });
+      const passwordMatches = await bcrypt.compare(password, hasUser.password);
+      if (!passwordMatches)
+        return res.status(400).json({ erro: "Credenciais inválidas" });
+      const token = jwt.sign(
+        { email: hasUser.email, id: hasUser.id },
+        process.env.SECRET_PHRASE,
+        {
+          expiresIn: "1h",
+        },
+      );
+      res.cookie("access-token", token, {
+        httpOnly: true,
+        maxAge: 60 * 60 * 100,
+      });
+      return res.status(200).json({ message: "Você está logado" });
+    } catch (error) {
+      return res
+        .status(500)
+        .json({ message: "Aconteceu algum erro durante o login" });
+    }
   },
 
   register: async (req: Request, res: Response) => {
