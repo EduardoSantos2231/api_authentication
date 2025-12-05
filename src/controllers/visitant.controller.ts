@@ -1,5 +1,7 @@
 import type { Request, Response } from "express";
 import jwt from "jsonwebtoken";
+import { user } from "../utils.js";
+import bcrypt from "bcrypt"
 
 const visitant = {
   getHomePage: async (req: Request, res: Response) => {
@@ -11,6 +13,7 @@ const visitant = {
      throw new Error("Parece que o segredo do JWT não foi definido no .env");
    }
    if (!email || !password) return res.status(400).json({erro: "Insira um email e uma senha"})
+   
    const token = jwt.sign(email, process.env.SECRET_PHRASE, {expiresIn: "1hr"})
    res.cookie("access-token", token, {httpOnly: true, maxAge: 60 * 60 * 100})
    res.status(200).json({message: 'Você está logado'})
