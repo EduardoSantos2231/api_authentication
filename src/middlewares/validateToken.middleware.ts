@@ -13,8 +13,9 @@ const validateJwtToken = (req: Request, res: Response, next: NextFunction) => {
       throw new Error("Parece que o segredo do JWT não foi definido no .env");
     }
     const info = jwt.verify(token, process.env.SECRET_PHRASE);
+    console.log(info);
     res.locals.userData = info
-    next();
+    return next();
   } catch (error) {
     console.error(error);
     return res.status(401).json({ mensagem: "Token invalidado" });
