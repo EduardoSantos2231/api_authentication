@@ -11,15 +11,20 @@ const visitant = {
   },
 
   login: async (req: Request, res: Response) => {
-    const { email, password } = req.body;
     if (!process.env.SECRET_PHRASE) {
       throw new Error("Parece que o segredo do JWT não foi definido no .env");
     }
+    const { email, password } = req.body;
     if (!email || !password)
       return res.status(400).json({ erro: "Insira um email e uma senha" });
-
-    const token = jwt.sign(email, process.env.SECRET_PHRASE, {
-      expiresIn: "1hr",
+    const hasUser = await user.findFirst({where: {email: email}})
+    
+    if (!hasUser) return res.status(400).json({erro: 'Credenciais não encontradas'})
+    
+    const passwordMatches = bcrypt.compare(password, hasUser.password)
+    if (!passwordMatches) return res.status(400).json({erro: "Credenciais inválidas"})
+    const token = jwt.sign({email: hasUser.email, id: hasUser.id}, process.env.SECRET_PHRASE, {
+      expiresIn: "1h",
     });
     res.cookie("access-token", token, {
       httpOnly: true,
